@@ -1,0 +1,10 @@
+.edit-content {
+  border: 2px solid rgba(128, 128, 128, 0.938);
+  border-radius: 4px;
+}
+.edit-content-input-textarea {
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  height: 40px;
+}

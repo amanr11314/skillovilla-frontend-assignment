@@ -1,0 +1,17 @@
+.dropdown-box {
+  display: flex;
+  gap: 24px;
+}
+.dropdown {
+  padding: 8px;
+  outline: none;
+  margin-top: 2%;
+  border-radius: 4px;
+  background-color: gray;
+  color: white;
+}
+option {
+  background-color: white;
+  color: black;
+  padding: 8px;
+}

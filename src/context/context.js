@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { orderBy } from "lodash";
 
 export const Context = React.createContext();
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
-  const [reply, setReply] = useState("");
+  const [edit, setEdit] = useState(null);
+  const [editContent, setEditContent] = useState("");
+  const [sortByKey, setSortByKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
 
   const userHandler = (newUser) => {
     setUser(newUser);
@@ -15,8 +19,11 @@ export const ContextProvider = ({ children }) => {
     setComments((prev) => newComments);
   };
 
-  const replyHandler = (newReply) => {
-    setReply((prev) => newReply);
+  const sortHandler = (newComments) => {
+    console.log({ newComments, sortByKey, sortOrder });
+    if (!sortByKey || !sortOrder) return newComments;
+    const result = orderBy(newComments, sortByKey, sortOrder);
+    return result;
   };
 
   const initialState = {
@@ -24,8 +31,15 @@ export const ContextProvider = ({ children }) => {
     commentsHandler,
     user,
     userHandler,
-    reply,
-    replyHandler,
+    edit,
+    setEdit,
+    editContent,
+    setEditContent,
+    sortOrder,
+    setSortOrder,
+    sortByKey,
+    setSortByKey,
+    sortHandler,
   };
 
   return <Context.Provider value={initialState}>{children}</Context.Provider>;

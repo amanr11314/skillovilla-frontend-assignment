@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import Avatar from "./Avatar";
 import CommentBox from "./CommentBox";
 import "../styles/Comment.css";
 import {
   getUserById,
-  getComments,
   getReplies,
-  delteComment,
+  deleteComment,
+  toggleLikeonComment,
+  toggleDislikeonComment,
 } from "../utils/api";
+import { Context } from "../context/context";
+import EditContent from "./EditContent";
+import moment from "moment";
+import _ from "lodash";
 
 const Comment = (props) => {
   const {
@@ -33,6 +38,12 @@ const Comment = (props) => {
   const [showReply, setShowReply] = useState(false);
   const [author, setAuthor] = useState();
   const [replies, setReplies] = useState([]);
+  const hasLiked = _.find(likes, (user) => user === self);
+  const hasDisliked = _.find(dislikes, (user) => user === self);
+
+  const { edit, setEdit, setEditContent, sortHandler } = useContext(Context);
+  // const [edit, setEdit] = useState(false);
+  // const [editContent, setEditContent] = useState("");
 
   const refetchReplies = async () => {
     let query = new URLSearchParams({ parent: id });
@@ -44,17 +55,32 @@ const Comment = (props) => {
     }
   };
 
+  const refetchCustomParent = () => {
+    if (parent === -1) {
+      props?.loadComments?.();
+    } else {
+      props?.refetchParentReplies?.();
+    }
+  };
+
   const onClickReply = () => {
     setShowReply(!showReply);
   };
 
   const onClickDelete = (e) => {
-    delteComment(id).then(() => {
-      if (parent === -1) {
-        props?.loadComments?.();
-      } else {
-        props?.refetchParentReplies?.();
-      }
+    deleteComment(id).then(() => {
+      refetchCustomParent();
+    });
+  };
+
+  const onCommentLike = () => {
+    toggleLikeonComment({ user: self }, id).then(() => {
+      refetchCustomParent();
+    });
+  };
+  const onCommentDislike = () => {
+    toggleDislikeonComment({ user: self }, id).then(() => {
+      refetchCustomParent();
     });
   };
 
@@ -101,6 +127,11 @@ const Comment = (props) => {
     }
   }, [id]);
 
+  const onClickEdit = () => {
+    setEditContent(content);
+    setEdit(id);
+  };
+
   return (
     <div key={id} className="comment">
       <Avatar userId={userId} />
@@ -114,47 +145,59 @@ const Comment = (props) => {
             </div>
           ) : null}
           &#x2022;
-          <div className="timestamp">{time}</div>
+          <div className="timestamp">{moment(time).fromNow()}</div>
         </div>
-        <p className="comment-content">{content}</p>
-        <div className="comment-footer">
-          {likes ? <span>{likes}</span> : null}
-          <span
-            class="material-symbols-outlined toolbar-action"
-            style={{
-              fontWeight: vote === 1 ? "bold" : "normal",
-              color: vote === 1 ? "black" : "grey",
-            }}
-          >
-            expand_less
-          </span>
-          <span>&nbsp;|&nbsp;</span>
-          {dislikes ? <span>{`-${dislikes}`}</span> : null}
-          <span
-            class="material-symbols-outlined toolbar-action"
-            style={{
-              fontWeight: vote === -1 ? "bold" : "normal",
-              color: vote === -1 ? "red" : "grey",
-            }}
-          >
-            expand_more
-          </span>
-          &#x2022; &nbsp;
-          <span className="toolbar-action" onClick={onClickReply}>
-            Reply
-          </span>
-          &nbsp; &#x2022; &nbsp;
-          {isSelf ? (
-            <>
-              <span className="toolbar-action">Edit</span>
-              &nbsp; &#x2022; &nbsp;
-              <span className="toolbar-action" onClick={onClickDelete}>
-                Delete
-              </span>
-              &nbsp; &#x2022;
-            </>
-          ) : null}
-        </div>
+        {edit === id ? (
+          <EditContent refetch={refetchCustomParent} />
+        ) : (
+          <p className="comment-content">{content}</p>
+        )}
+        {edit === id ? null : (
+          <div className="comment-footer">
+            {likes?.length !== 0 ? <span>{likes?.length}</span> : null}
+            <span
+              class="material-symbols-outlined toolbar-action"
+              style={{
+                fontWeight: hasLiked ? "bold" : "normal",
+                color: hasLiked ? "black" : "grey",
+              }}
+              onClick={onCommentLike}
+            >
+              expand_less
+            </span>
+            <span>&nbsp;|&nbsp;</span>
+            {dislikes?.length !== 0 ? (
+              <span>{`-${dislikes?.length}`}</span>
+            ) : null}
+            <span
+              class="material-symbols-outlined toolbar-action"
+              style={{
+                fontWeight: hasDisliked ? "bold" : "normal",
+                color: hasDisliked ? "red" : "grey",
+              }}
+              onClick={onCommentDislike}
+            >
+              expand_more
+            </span>
+            &#x2022; &nbsp;
+            <span className="toolbar-action" onClick={onClickReply}>
+              Reply
+            </span>
+            &nbsp; &#x2022; &nbsp;
+            {isSelf ? (
+              <>
+                <span className="toolbar-action" onClick={onClickEdit}>
+                  Edit
+                </span>
+                &nbsp; &#x2022; &nbsp;
+                <span className="toolbar-action" onClick={onClickDelete}>
+                  Delete
+                </span>
+                &nbsp; &#x2022;
+              </>
+            ) : null}
+          </div>
+        )}
         {/* Conditionally render reply box */}
         {showReply ? (
           <CommentBox
@@ -167,7 +210,7 @@ const Comment = (props) => {
           />
         ) : null}
         {/* Render replies */}
-        {replies?.map((reply) => {
+        {sortHandler(replies)?.map((reply) => {
           return (
             <Comment
               key={reply?.id}

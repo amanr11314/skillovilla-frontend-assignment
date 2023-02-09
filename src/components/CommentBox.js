@@ -3,6 +3,7 @@ import Avatar from "./Avatar";
 import "../styles/CommentBox.css";
 import { Context } from "../context/context";
 import { postComment } from "../utils/api";
+import moment from "moment/moment";
 
 const CommentBox = (props) => {
   const {
@@ -21,9 +22,9 @@ const CommentBox = (props) => {
       const comment = {
         content: e.target.value,
         userId: user.id,
-        time: 7,
-        likes: 0,
-        dislikes: 0,
+        time: moment().format(),
+        likes: [],
+        dislikes: [],
         parent: isReply ? parent : -1,
         isMod: false,
       };
