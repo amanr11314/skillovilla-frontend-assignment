@@ -2,7 +2,7 @@ const url = "http://localhost:8080/";
 
 export const getComments = async () => {
   try {
-    const response = await fetch(url + "comments");
+    const response = await fetch(url + "comments?parent=-1");
     const data = await response.json();
     return data;
   } catch (err) {
@@ -34,7 +34,7 @@ export const getUserById = async (id) => {
 export const getReplies = async (searchParam) => {
   try {
     const response = await fetch(
-      url + `replies?` + new URLSearchParams(searchParam)
+      url + `comments?` + new URLSearchParams(searchParam)
     );
     const data = await response.json();
 
@@ -115,9 +115,9 @@ export const updateComment = async (route, body, id) => {
   }
 };
 
-export const delteComment = async (route, id) => {
+export const delteComment = async (id) => {
   try {
-    const response = await fetch(url + `${route}/${id}`, {
+    const response = await fetch(url + `comments/${id}`, {
       method: "DELETE",
     });
     const data = await response.json();

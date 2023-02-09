@@ -45,6 +45,10 @@ function App() {
 
   console.log(comments);
 
+  const loadComments = () => {
+    getComments().then((res) => commentsHandler(res));
+  };
+
   useEffect(() => {
     console.log("called loaduser");
     loadUser()
@@ -64,8 +68,17 @@ function App() {
         <SignIn />
       ) : (
         <div className="root">
-          <CommentBox />
-          <Comment obj={obj} />
+          <CommentBox refetchReplies={loadComments} />
+          {comments?.map((comment) => {
+            return (
+              <Comment
+                key={comment.id}
+                loadComments={loadComments}
+                self={user?.id}
+                {...comment}
+              />
+            );
+          })}
         </div>
       )}
     </>
