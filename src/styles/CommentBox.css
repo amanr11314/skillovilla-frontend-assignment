@@ -1,0 +1,21 @@
+textarea {
+  outline: none;
+  resize: none;
+  overflow: hidden;
+}
+.join-discussion {
+  margin: 12px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.discussion-input {
+  border: 2px solid rgba(128, 128, 128, 0.938);
+  border-radius: 4px;
+}
+.discussion-input-textarea {
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  height: 40px;
+}

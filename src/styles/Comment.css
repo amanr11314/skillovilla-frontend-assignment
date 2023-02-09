@@ -1,0 +1,32 @@
+.comment {
+  margin: 12px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: gray;
+}
+.comment-header-username {
+  color: #2ac0d1;
+  font-weight: 700;
+  font-size: small;
+}
+.comment-header-reply-to {
+  display: flex;
+  align-items: center;
+  font-size: smaller;
+}
+.comment-content {
+  margin: 4px 0;
+}
+.comment-footer {
+  display: flex;
+  color: grey;
+}
+.toolbar-action:hover {
+  cursor: pointer;
+}
