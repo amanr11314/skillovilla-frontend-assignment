@@ -1,5 +1,5 @@
 import _ from "lodash";
-const url = "http://localhost:8080/";
+const url = "https://hollow-leaf-gate.glitch.me/";
 
 export const getComments = async () => {
   try {
