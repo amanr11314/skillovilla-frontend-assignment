@@ -32,9 +32,6 @@ const Comment = (props) => {
 
   const isSelf = userId === self;
 
-  // const [likes, setLikes] = useState(0);
-  // const [dislikes, setDislikes] = useState(0);
-  const [vote, setVote] = useState(0);
   const [showReply, setShowReply] = useState(false);
   const [author, setAuthor] = useState();
   const [replies, setReplies] = useState([]);
@@ -42,9 +39,8 @@ const Comment = (props) => {
   const hasDisliked = _.find(dislikes, (user) => user === self);
 
   const { edit, setEdit, setEditContent, sortHandler } = useContext(Context);
-  // const [edit, setEdit] = useState(false);
-  // const [editContent, setEditContent] = useState("");
 
+  /* to refetch all replies under this comment */
   const refetchReplies = async () => {
     let query = new URLSearchParams({ parent: id });
     try {
@@ -55,6 +51,7 @@ const Comment = (props) => {
     }
   };
 
+  /* to refetch all replies of this comment's parent; in case of root load all comments */
   const refetchCustomParent = () => {
     if (parent === -1) {
       props?.loadComments?.();
@@ -65,6 +62,11 @@ const Comment = (props) => {
 
   const onClickReply = () => {
     setShowReply(!showReply);
+  };
+
+  const onClickEdit = () => {
+    setEditContent(content);
+    setEdit(id);
   };
 
   const onClickDelete = (e) => {
@@ -126,11 +128,6 @@ const Comment = (props) => {
       }
     }
   }, [id]);
-
-  const onClickEdit = () => {
-    setEditContent(content);
-    setEdit(id);
-  };
 
   return (
     <div key={id} className="comment">

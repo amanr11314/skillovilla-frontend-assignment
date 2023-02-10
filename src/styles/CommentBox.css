@@ -19,3 +19,8 @@ textarea {
   padding: 8px;
   height: 40px;
 }
+.user-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
