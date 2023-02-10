@@ -25,7 +25,6 @@ export const getUserById = async (id) => {
   try {
     const response = await fetch(url + `user/${id}`);
     const data = await response.json();
-    // console.log({ getuserbyid: data });
     return data;
   } catch (err) {
     console.log(err.message);
@@ -47,7 +46,7 @@ export const getReplies = async (searchParam) => {
 
 export const loadUser = async () => {
   const id = localStorage.getItem("id");
-  // console.log({ loaduserid: id });
+  if (!id) return;
   try {
     const response = await getUserById(id);
     const data = response;
@@ -59,7 +58,6 @@ export const loadUser = async () => {
 
 export const logInUser = async (body) => {
   try {
-    console.log("body=", body);
     const response = await fetch(url + `user?username=${body?.username}`, {
       method: "GET",
     });

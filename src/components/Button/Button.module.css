@@ -4,12 +4,12 @@
   cursor: pointer;
   font-size: large;
 }
-.button-primary {
+.primary {
   background-color: hsl(206, 100%, 52%);
   color: aliceblue;
   border: none;
 }
-.button-secondary {
+.secondary {
   border: 1px solid #121212;
   font-size: medium;
 }

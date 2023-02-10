@@ -1,13 +1,22 @@
 import React, { useContext } from "react";
-import "../styles/EditContent.css";
-import "../styles/Button.css";
-import { Context } from "../context/context";
-import { updateComment } from "../utils/api";
+
+//Styles
+import styles from "./EditContent.module.css";
+
+//Context
+import { Context } from "../../context/context";
+
+//Utils
 import moment from "moment/moment";
 import _ from "lodash";
+import { updateComment } from "../../utils/api";
+
+//Components
+import Button from "../Button/Button";
 
 const EditContent = (props) => {
-  const { edit, setEdit, editContent, setEditContent } = useContext(Context);
+  const { edit, setEdit, editContent, setEditContent, showToast } =
+    useContext(Context);
 
   const { refetch } = props;
 
@@ -28,7 +37,19 @@ const EditContent = (props) => {
     };
     updateComment(body, edit)
       .then(() => {
+        showToast({
+          type: "info",
+          title: "Edit",
+          description: "Comment Updated!",
+        });
         refetch();
+      })
+      .catch((err) => {
+        showToast({
+          type: "danger",
+          title: "Error",
+          description: "Something went wrong!",
+        });
       })
       .finally(() => {
         hideEdit();
@@ -41,7 +62,7 @@ const EditContent = (props) => {
 
   return (
     <div>
-      <div className="edit-content">
+      <div className={styles["edit-content"]}>
         <textarea
           onChange={onEditComment}
           value={editContent}
@@ -49,16 +70,16 @@ const EditContent = (props) => {
           rows={1}
           cols={90}
           placeholder="Edit comment"
-          className="edit-content-input-textarea"
+          className={styles["edit-content-input-textarea"]}
         ></textarea>
       </div>
-      <div className="user-actions">
-        <button className="button button-primary" onClick={onUpdateComment}>
+      <div className={styles["user-actions"]}>
+        <Button type="primary" onClick={onUpdateComment}>
           Update
-        </button>
-        <button className="button button-secondary" onClick={onCancelEdit}>
+        </Button>
+        <Button type="secondary" onClick={onCancelEdit}>
           Cancel
-        </button>
+        </Button>
       </div>
     </div>
   );

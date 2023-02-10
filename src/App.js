@@ -1,24 +1,37 @@
-import "./App.css";
-import CommentBox from "./components/CommentBox";
-import Comment from "./components/Comment";
-import { Context } from "./context/context";
 import { useContext, useEffect } from "react";
-import SignIn from "./components/SignIn";
+
+//Styles
+import "./App.css";
+
+//Context
+import { Context } from "./context/context";
+
+//Utils
 import { loadUser, getComments } from "./utils/api";
-import Dropdown from "./components/Dropdown";
+
+//Components
+import SignIn from "./components/SignIn/SignIn";
+import CommentBox from "./components/CommentBox/CommentBox";
+import Comment from "./components/Comment/Comment";
+import Dropdown from "./components/Dropdown/Dropdown";
+import Toast from "./components/Toast/Toast";
 
 function App() {
-  const { comments, commentsHandler, user, userHandler, sortHandler } =
-    useContext(Context);
-
-  console.log(comments);
+  const {
+    comments,
+    commentsHandler,
+    user,
+    userHandler,
+    sortHandler,
+    toastList,
+    toastHandler,
+  } = useContext(Context);
 
   const loadComments = () => {
     getComments().then((res) => commentsHandler(res));
   };
 
   useEffect(() => {
-    console.log("called loaduser");
     loadUser()
       .then((data) => {
         userHandler(data);
@@ -36,6 +49,11 @@ function App() {
         <SignIn />
       ) : (
         <div className="root">
+          <Toast
+            toastlist={toastList}
+            position="bottom-right"
+            setList={toastHandler}
+          />
           <CommentBox refetchReplies={loadComments} />
           <Dropdown />
           {sortHandler(comments)?.map((comment) => {

@@ -1,7 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Context } from "../context/context";
-import { logInUser } from "../utils/api";
-import "../styles/SignIn.css";
+
+//Styles
+import styles from "./SignIn.module.css";
+
+//Context
+import { Context } from "../../context/context";
+
+//Utils
+import { logInUser } from "../../utils/api";
 
 const initialState = {
   username: "",
@@ -31,11 +37,11 @@ const SignIn = () => {
   };
 
   return (
-    <div className="container">
+    <div className={styles["container"]}>
       <h2>Enter username to proceed</h2>
-      <form className="form-box" onSubmit={handleSignIn}>
+      <form className={styles["form-box"]} onSubmit={handleSignIn}>
         <input
-          className="form-box-input"
+          className={styles["form-box-input"]}
           type="text"
           name="username"
           required
@@ -43,7 +49,7 @@ const SignIn = () => {
           onChange={onChangeUsername}
           value={formData?.username}
         />
-        <button className="form-box-btn-submit" type="submit">
+        <button className={styles["form-box-btn-submit"]} type="submit">
           Sign In
         </button>
       </form>
