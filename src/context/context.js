@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { orderBy } from "lodash";
+import { orderBy, size } from "lodash";
 
 export const Context = React.createContext();
 
@@ -22,6 +22,14 @@ export const ContextProvider = ({ children }) => {
 
   const sortHandler = (newComments) => {
     if (!sortByKey || !sortOrder) return newComments;
+    if (sortByKey === "likes") {
+      const result = orderBy(
+        newComments,
+        [(comment) => size(comment?.likes)],
+        sortOrder
+      );
+      return result;
+    }
     const result = orderBy(newComments, sortByKey, sortOrder);
     return result;
   };
