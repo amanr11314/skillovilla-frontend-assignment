@@ -37,10 +37,12 @@ function App() {
         userHandler(data);
       })
       .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getComments().then((res) => commentsHandler(res));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
